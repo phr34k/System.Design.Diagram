@@ -1,0 +1,59 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:s="clr-namespace:System.Design.Diagram"
+    xmlns:i="clr-namespace:System.Design.Diagram.Nodes">
+
+
+
+    <DataTemplate x:Key="InputConnectors">
+        <Grid>
+            <TextBlock Text="{Binding Symbol.Name}" HorizontalAlignment="Left" />
+            <s:Connector x:Name="Part_Source" Normal="-30,0"
+                                                 VerticalAlignment="Center" HorizontalAlignment="Left" Margin="-10,1,10,-1" />
+        </Grid>
+    </DataTemplate>
+    <DataTemplate x:Key="OuputConnectors">
+        <Grid>
+            <TextBlock Text="{Binding Symbol.Name}" HorizontalAlignment="Right" />
+            <s:Connector x:Name="Part_Source"  Normal="30,0"
+                                                 VerticalAlignment="Center" HorizontalAlignment="Right" Margin="10,1,-10,-1" />
+        </Grid>
+    </DataTemplate>
+    <Style TargetType="{x:Type s:EditableTextBlock}" x:Key="EditableTextBlockStyle">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=IsInEditMode, RelativeSource={RelativeSource Self}}" Value="true">
+                <Setter Property="MinHeight" Value="25" />
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="CommonConnectorsHost">
+        <Setter Property="ItemsControl.ItemsPanel">
+            <Setter.Value>
+                <ItemsPanelTemplate>
+                    <StackPanel />
+                </ItemsPanelTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="InputConnectorsHost" BasedOn="{StaticResource CommonConnectorsHost}">
+        <Setter Property="ItemsControl.ItemTemplate" Value="{StaticResource InputConnectors}" />
+    </Style>
+    <Style x:Key="OutputConnectorsHost" BasedOn="{StaticResource CommonConnectorsHost}">
+        <Setter Property="ItemsControl.ItemTemplate" Value="{StaticResource OuputConnectors}" />
+    </Style>
+
+    <DataTemplate DataType="{x:Type i:GraphNode}">
+        <StackPanel Margin="2">
+            <Grid Margin="10,0,10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <ItemsControl Name="Part_Inputs"  Grid.Column="0" ItemsSource="{Binding Inputs}" Style="{StaticResource InputConnectorsHost}" />
+                <ItemsControl Name="Part_Outputs" Grid.Column="1" ItemsSource="{Binding Outputs}" Style="{StaticResource OutputConnectorsHost}" />
+            </Grid>
+            <s:EditableTextBlock Text="{Binding Name, Mode=TwoWay}" Style="{StaticResource EditableTextBlockStyle}" />
+        </StackPanel>
+    </DataTemplate>
+
+</ResourceDictionary>
